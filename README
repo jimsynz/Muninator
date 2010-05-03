@@ -45,3 +45,17 @@ http://munin-monitoring.org/wiki/HowToWritePlugins).
 
 You can add them on the fly and call Muninator::Commands.reload at
 any time.
+
+Acts As Munin Plugin:
+---------------------
+
+You can automatically start graphing your models by adding `acts_as_munin_plugin`
+to your models.
+
+Phusion Passenger:
+------------------
+
+A note on Phusion; it spawns and shuts down Rails instances accordig to
+load, which is quite sensible, but means a lot of the in-process stats
+aren't going to be much use to you, however any plugins that do things
+like examine log files will work fine.
