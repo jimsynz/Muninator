@@ -64,3 +64,6 @@ A note on Phusion; it spawns and shuts down Rails instances accordig to
 load, which is quite sensible, but means a lot of the in-process stats
 aren't going to be much use to you, however any plugins that do things
 like examine log files will work fine.
+Because I'm running only a handful of sites I just don't let Passenger
+kill instances unless it has to, this seems to do the trick:
+  passenger_pool_idle_time 0;
