@@ -1,0 +1,47 @@
+Muninator - A munin-node inside Rails
+=====================================
+
+This is a really early implementation of munin-node running
+inside your rails process, in the hopes that we can add
+graphing and visibility for a whole bunch of stuff that
+you have to guess at right now.
+
+Configuration:
+--------------
+
+Basic configuration which will hit 90% of use cases as follows:
+
+Create muninator.yml in RAILS_ROOT/config/ and populate it
+like so:
+
+production:
+  port: 4950
+  server_name: myrailsapp.com
+  restrict: localhost
+
+Create RAILS_ROOT/initializers/muninator.rb:
+
+Muninator.from_config
+
+You can then add myrailsapp.com to your /etc/munin/munin.conf
+
+[myrailsapp.com]
+  address 127.0.0.1
+  use_node_name yes
+  port 4950
+
+Adding plugins:
+---------------
+
+You can put your plugins in lib/commands/ of this project or
+you can add them to your own project and call:
+
+Muninator::Commands.search_paths << RAILS_ROOT + "/lib/munin_plugins/"
+
+Plugin classes need to be in the namespace Muninator::Commands and
+define the config() and fetch() class methods which return strings
+in the format expected by Munin (see 
+http://munin-monitoring.org/wiki/HowToWritePlugins).
+
+You can add them on the fly and call Muninator::Commands.reload at
+any time.
