@@ -5,6 +5,8 @@ This is a really early implementation of munin-node running
 inside your rails process, in the hopes that we can add
 graphing and visibility for a whole bunch of stuff that
 you have to guess at right now.
+You will need a working Munin graphing machine:
+http://munin-monitoring.org/
 
 Configuration:
 --------------
