@@ -11,7 +11,7 @@ graph_vlabel threads
 total.label Total threads
 running.label Running threads
 sleeping.label Sleeping threads
-abording.label Aborting threads
+aborting.label Aborting threads
         EOS
       end
 

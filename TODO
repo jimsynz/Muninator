@@ -1,0 +1,7 @@
+TODO
+====
+
+  - Add table size information via acts_as_munin_plugin
+  - Add query time information via acts_as_munin_plugin
+  - Add plugin for template rendering statistics
+  - Various plugins to time controller actions
