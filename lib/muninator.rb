@@ -30,7 +30,9 @@ module Muninator
         @server = TCPServer.open(port)
         at_exit do
           @server.close
-          File.delete(@lockfile)
+          if File.exists? @lockfile 
+            File.delete(@lockfile)
+          end
         end
         @port = port
         @server_name = server_name
@@ -90,7 +92,7 @@ module Muninator
               if Muninator::Commands.list.member? args.first
                 begin
                   instance_eval <<-RUBY
-                  @socket.puts Muninator::Commands::#{args.first[0..0].upcase + args.first[1..-1]}.config
+                  @socket.puts Muninator::Commands::#{args.first.camelize}.config
                   RUBY
                 rescue Exception => e
                   @socket.puts "# Error: #{e.message}"
@@ -103,7 +105,7 @@ module Muninator
               if Muninator::Commands.list.member? args.first
                 begin
                   instance_eval <<-RUBY
-                  @socket.puts Muninator::Commands::#{args.first[0..0].upcase + args.first[1..-1]}.fetch
+                  @socket.puts Muninator::Commands::#{args.first.camelize}.fetch
                   RUBY
                 rescue Exception => e
                   @socket.puts "# Error: #{e.message}"
@@ -152,7 +154,7 @@ module Muninator
         require File.dirname(__FILE__) + '/commands/memory.rb'
       end
       def list
-        self.constants.collect { |name| name.downcase }.sort
+        self.constants.collect { |name| name.underscore }.sort
       end
     end
 
