@@ -75,7 +75,7 @@ module Muninator
 
     def initialize(socket)
       @socket = socket
-      Timeout.timeout(30) do
+      Timeout.timeout(60) do
         begin
           @socket.puts "# munin node at #{Muninator.server_name}"
           while line = @socket.gets do
