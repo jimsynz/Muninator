@@ -51,6 +51,9 @@ Acts As Munin Plugin:
 
 You can automatically start graphing your models by adding `acts_as_munin_plugin`
 to your models.
+You might also want to call the class names of each of your monitored models in
+the initializer so that the plugin is loaded at start up (ActiveRecord models are
+lazy loaded).
 
 Phusion Passenger:
 ------------------
