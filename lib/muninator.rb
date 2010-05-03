@@ -22,17 +22,36 @@ module Muninator
 
     def start(port, server_name)
       @lockfile = File.join(RAILS_ROOT, 'tmp', "muninator_port_#{port.to_s}.lock")
-      unless File.exists? @lockfile
+      if File.exist? @lockfile
+        # The PIDfile exists, but let's check that it's not stale.
+        f = File.open(@lockfile, "r")
+        pid = f.gets.chomp.to_i
+        f.close
+        if pid > 0
+          begin
+            Process.kill(0,pid)
+          rescue Errno::ESRCH => e
+            # Lockfile is stale, nuke it.
+            RAILS_DEFAULT_LOGGER.warn("Overriding stale lockfile #{@lockfile}")
+            File.delete(@lockfile)
+          end
+        end
+      end
+      # Attempt to start the server only if the pid file isn't
+      # there.
+      if File.exist?(@lockfile) == false
+        Muninator::Commands.reload
+        @server = TCPServer.open(port)
+        RAILS_DEFAULT_LOGGER.info("Opening port #{port} as Munin Node.")
         File.open(@lockfile, "w+") do |io|
           io.puts $$
         end
-        Muninator::Commands.reload
-        @server = TCPServer.open(port)
         at_exit do
           @server.close
-          if File.exists? @lockfile 
+          if File.exist? @lockfile 
             File.delete(@lockfile)
           end
+          RAILS_DEFAULT_LOGGER.info("Closing Munin Node on port #{port}.")
         end
         @port = port
         @server_name = server_name
@@ -48,6 +67,7 @@ module Muninator
               client.close
               next
             end
+            RAILS_DEFAULT_LOGGER.info("Accepting connection from #{client.peeraddr.last}")
             Thread.new do
               Muninator::Client.new(client)
             end
@@ -61,7 +81,7 @@ module Muninator
     end
 
     def version
-      "2010.4.30"
+      "2010.5.3"
     end
 
     def restrict_to(what)
