@@ -8,7 +8,8 @@ module Muninator
     attr_accessor :port, :server_name
 
     def from_config
-      conf = YAML.load_file(File.join(RAILS_ROOT, "config", "muninator.yaml"))[RAILS_ENV]
+      config = YAML.load_file(File.join(RAILS_ROOT, "config", "muninator.yml"))
+      conf = config[RAILS_ENV] || {}
       if conf['restrict']
         if conf['restrict'] == 'localhost'
           restrict_to :localhost

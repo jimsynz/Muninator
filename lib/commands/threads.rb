@@ -7,11 +7,11 @@ module Muninator
 graph_title Ruby Threads
 graph_category threads
 graph_info Threads started by this Ruby process
-graph_vlabel number
-total.label "Total threads"
-running.label "Running threads"
-sleeping.label "Sleeping threads"
-abording.label "Aborting threads"
+graph_vlabel threads
+total.label Total threads
+running.label Running threads
+sleeping.label Sleeping threads
+abording.label Aborting threads
         EOS
       end
 

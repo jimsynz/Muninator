@@ -6,8 +6,8 @@ module Muninator
 graph_title Memory Usage
 graph_category memory
 graph_info Memory usage by this Ruby process
-graph_vlabel mem
-mem.label kbytes
+graph_vlabel kbytes
+mem.label RSS Memory Usage
         EOS
       end
       def self.fetch
