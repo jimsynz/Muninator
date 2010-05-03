@@ -38,7 +38,12 @@ module Muninator
         @server_name = server_name
         @proc = Thread.new do
           loop do
-            client = @server.accept
+            begin 
+              client = @server.accept_nonblock
+            rescue Errno::EAGAIN, Errno::ECONNABORTED, Errno::EPROTO, Errno::EINTR
+              IO.select([@server])
+              retry
+            end
             if ((@restrict ||= []).size > 0) && (! @restrict.member? client.peeraddr.last)
               client.close
               next
