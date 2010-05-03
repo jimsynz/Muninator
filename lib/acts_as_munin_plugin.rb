@@ -25,7 +25,7 @@ module MashdCc
                     "created.label Created\n"
                   end
                   def self.fetch
-                    "all.value " + #{model.name}..count.to_s + "\n" +
+                    "all.value " + #{model.name}.count.to_s + "\n" +
                     "updated.value " + #{model.name}.count(:all, :conditions => [ "updated_at >= ?", 5.minutes.ago ]).to_s + "\n" +
                     "created.value " + #{model.name}.count(:all, :conditions => [ "created_at >= ?", 5.minutes.ago ]).to_s + "\n"
                   end
