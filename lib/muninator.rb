@@ -6,6 +6,7 @@ module Muninator
   class << self
 
     attr_accessor :port, :server_name
+    @running = false
 
     def from_config
       config = YAML.load_file(File.join(RAILS_ROOT, "config", "muninator.yml"))
@@ -17,11 +18,28 @@ module Muninator
           restrict_to conf['restrict'].split(',').collect { |r| r = r.strip ; r == "" ? nil : r }.compact
         end
       end
-      start(conf['port'], conf['server_name'])
+      if defined?(PhusionPassenger)
+        PhusionPassenger.on_event(:starting_worker_process) do |forked|
+          if forked
+            if @running == true
+              Muninator.restart
+            else
+              Muninator.start(conf['port'], conf['server_name'])
+            end
+          else
+            Muninator.start(conf['port'], conf['server_name'])
+          end
+        end
+      else
+        start(conf['port'], conf['server_name'])
+      end
     end
 
     def start(port, server_name)
+      @port = port
+      @server_name = server_name
       @lockfile = File.join(RAILS_ROOT, 'tmp', "muninator_port_#{port.to_s}.lock")
+      # Add callback for Passenger to restart Muninator if needed.
       if File.exist? @lockfile
         # The PIDfile exists, but let's check that it's not stale.
         f = File.open(@lockfile, "r")
@@ -40,36 +58,39 @@ module Muninator
       # Attempt to start the server only if the pid file isn't
       # there.
       if File.exist?(@lockfile) == false
-        Muninator::Commands.reload
-        @server = TCPServer.open(port)
-        RAILS_DEFAULT_LOGGER.info("Opening port #{port} as Munin Node.")
-        File.open(@lockfile, "w+") do |io|
-          io.puts $$
-        end
-        at_exit do
-          @server.close
-          if File.exist? @lockfile 
-            File.delete(@lockfile)
+        Thread.new do 
+          Muninator::Commands.reload
+          @server = TCPServer.open(port)
+          RAILS_DEFAULT_LOGGER.info("Opening port #{port} as Munin Node.")
+          File.open(@lockfile, "w+") do |io|
+            io.puts $$
           end
-          RAILS_DEFAULT_LOGGER.info("Closing Munin Node on port #{port}.")
-        end
-        @port = port
-        @server_name = server_name
-        @proc = Thread.new do
-          loop do
-            begin 
-              client = @server.accept_nonblock
-            rescue Errno::EAGAIN, Errno::ECONNABORTED, Errno::EPROTO, Errno::EINTR
-              IO.select([@server])
-              retry
+          @running = true
+          at_exit do
+            @server.close
+            if File.exist? @lockfile 
+              File.delete(@lockfile)
             end
-            if ((@restrict ||= []).size > 0) && (! @restrict.member? client.peeraddr.last)
-              client.close
-              next
-            end
-            RAILS_DEFAULT_LOGGER.info("Accepting connection from #{client.peeraddr.last}")
-            Thread.new do
-              Muninator::Client.new(client)
+            RAILS_DEFAULT_LOGGER.info("Closing Munin Node on port #{port}.")
+          end
+          @port = port
+          @server_name = server_name
+          @proc = Thread.new do
+            loop do
+              begin 
+                client = @server.accept_nonblock
+                RAILS_DEFAULT_LOGGER.info("Accepting connection from #{client.peeraddr.last}")
+                if ((@restrict ||= []).size > 0) && (! @restrict.member? client.peeraddr.last)
+                  client.close
+                else
+                  Thread.new do 
+                    Muninator::Client.new(client)
+                  end
+                end
+              rescue Errno::EAGAIN, Errno::ECONNABORTED, Errno::EPROTO, Errno::EINTR
+                IO.select([@server])
+                retry
+              end
             end
           end
         end
@@ -77,7 +98,21 @@ module Muninator
     end
 
     def stop
-      @proc.kill
+      begin
+        @server.close
+      rescue
+      end
+      begin
+        @proc.kill
+      rescue
+      end
+    end
+
+    def restart
+      if @running == true
+        stop
+        start(@port, @server_name)
+      end
     end
 
     def version
@@ -105,6 +140,7 @@ module Muninator
           @socket.puts "# munin node at #{Muninator.server_name}"
           while line = @socket.gets do
             line.chomp!
+            RAILS_DEFAULT_LOGGER.debug("Received #{line.inspect} from client.")
             cmd = line.split(' ').first
             args = line.split(' ')[1..-1]
             case cmd 
@@ -134,6 +170,7 @@ module Muninator
                   RUBY
                 rescue Exception => e
                   @socket.puts "# Error: #{e.message}"
+                  RAILS_DEFAULT_LOGGER.debug(e.inspect)
                 end
               else
                 @socket.puts "# Unknown service"
