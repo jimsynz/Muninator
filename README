@@ -48,8 +48,8 @@ http://munin-monitoring.org/wiki/HowToWritePlugins).
 You can add them on the fly and call Muninator::Commands.reload at
 any time.
 
-Acts As Munin Plugin:
----------------------
+Automatic Monitoring of Models
+------------------------------
 
 You can automatically start graphing your models by adding `acts_as_munin_plugin`
 to your models.
@@ -57,13 +57,15 @@ You might also want to call the class names of each of your monitored models in
 the initializer so that the plugin is loaded at start up (ActiveRecord models are
 lazy loaded).
 
+Automatic Monitoring of Controllers
+-----------------------------------
+
+You can automatically start graphing hits, response body size and response
+latency by calling the `monitor_with_munin` class method in your controllers.
+Note that because Rails lazy-loads controllers you probably won't see graphs
+for controllers that seldom or never used.
+
 Phusion Passenger:
 ------------------
 
-A note on Phusion; it spawns and shuts down Rails instances accordig to
-load, which is quite sensible, but means a lot of the in-process stats
-aren't going to be much use to you, however any plugins that do things
-like examine log files will work fine.
-Because I'm running only a handful of sites I just don't let Passenger
-kill instances unless it has to, this seems to do the trick:
-  passenger_pool_idle_time 0;
+As of May 4th 2010, Muninator seems to work fine with Passenger.

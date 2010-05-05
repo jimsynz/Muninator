@@ -116,7 +116,7 @@ module Muninator
     end
 
     def version
-      "2010.5.4"
+      "2010.5.5"
     end
 
     def restrict_to(what)
