@@ -55,34 +55,34 @@ module MashdCc
       
       class Hits
         def self.setup(opts)
-          @@actions = opts[:actions]
-          @@controller = opts[:controller]
+          @actions = opts[:actions]
+          @controller = opts[:controller]
           clean
         end
 
         def self.filter(controller)
-          if @@actions.member? controller.params[:action].to_sym
-            @@hits[controller.params[:action].to_sym] = @@hits[controller.params[:action].to_sym] + 1
+          if @actions.member? controller.params[:action].to_sym
+            @hits[controller.params[:action].to_sym] = @hits[controller.params[:action].to_sym] + 1
           end
           1
         end
 
         def self.config
           r = <<-EOS
-graph_title #{@@controller} Hits
+graph_title #{@controller} Hits
 graph_category Controllers
-graph_info Action hits on controller #{@@controller}
+graph_info Action hits on controller #{@controller}
 graph_vlabel hits
           EOS
-          @@actions.each do |action|
+          @actions.each do |action|
             r += "#{action.to_s}.label Hits to #{action.to_s.camelize}\n"
           end
           r
         end
         
         def self.fetch
-          r = @@actions.collect do |action|
-            "#{action.to_s}.value #{@@hits[action]}"
+          r = @actions.collect do |action|
+            "#{action.to_s}.value #{@hits[action]}"
           end
           clean
           r * "\n"
@@ -91,26 +91,26 @@ graph_vlabel hits
         private
 
         def self.clean
-          @@hits = {}
-          @@actions.each do |action|
-            @@hits[action] = 0
+          @hits = {}
+          @actions.each do |action|
+            @hits[action] = 0
           end
         end
       end
 
       class Latency
         def self.setup(opts)
-          @@actions = opts[:actions]
-          @@controller = opts[:controller]
+          @actions = opts[:actions]
+          @controller = opts[:controller]
           clean
         end
 
         def self.filter(controller)
-          if @@actions.member? controller.params[:action].to_sym
+          if @actions.member? controller.params[:action].to_sym
             start = Time.now
             yield
             took = Time.now - start
-            @@latency[controller.params[:action].to_sym] << took
+            @latency[controller.params[:action].to_sym] << took
           else 
             yield
           end
@@ -119,12 +119,12 @@ graph_vlabel hits
 
         def self.config
           r = <<-EOS
-graph_title #{@@controller} Response Time
+graph_title #{@controller} Response Time
 graph_category Controllers
-graph_info Response time of hits on controller #{@@controller}
+graph_info Response time of hits on controller #{@controller}
 graph_vlabel seconds
           EOS
-          @@actions.each do |action|
+          @actions.each do |action|
             r += "#{action.to_s}_avg.label average response time of #{action.to_s.camelize}\n"
             r += "#{action.to_s}_min.label minimum response time of #{action.to_s.camelize}\n"
             r += "#{action.to_s}_max.label maximum response time of #{action.to_s.camelize}\n"
@@ -133,10 +133,10 @@ graph_vlabel seconds
         end
         
         def self.fetch
-          r = @@actions.collect do |action|
-            [ "#{action.to_s}_avg.value #{@@latency[action].empty? ? 0 : @@latency[action].sum.to_f / @@latency[action].size}",
-              "#{action.to_s}_min.value #{(@@latency[action].min) || 0}",
-              "#{action.to_s}_max.value #{(@@latency[action].max) || 0}" ]
+          r = @actions.collect do |action|
+            [ "#{action.to_s}_avg.value #{@latency[action].empty? ? 0 : @latency[action].sum.to_f / @latency[action].size}",
+              "#{action.to_s}_min.value #{(@latency[action].min) || 0}",
+              "#{action.to_s}_max.value #{(@latency[action].max) || 0}" ]
           end
           clean
           r.flatten * "\n"
@@ -145,35 +145,35 @@ graph_vlabel seconds
         private
 
         def self.clean
-          @@latency = {}
-          @@actions.each do |action|
-            @@latency[action] = []
+          @latency = {}
+          @actions.each do |action|
+            @latency[action] = []
           end
         end
       end
 
       class Response
         def self.setup(opts)
-          @@actions = opts[:actions]
-          @@controller = opts[:controller]
+          @actions = opts[:actions]
+          @controller = opts[:controller]
           clean
         end
 
         def self.filter(controller)
-          if @@actions.member? controller.params[:action].to_sym
-            @@size[controller.params[:action].to_sym] << controller.response.body.nil? ? 0 : controller.response.body.size
+          if @actions.member? controller.params[:action].to_sym
+            @size[controller.params[:action].to_sym] << controller.response.body.nil? ? 0 : controller.response.body.size
           end
           1
         end
 
         def self.config
           r = <<-EOS
-graph_title #{@@controller} Response Size
+graph_title #{@controller} Response Size
 graph_category Controllers
-graph_info Response size of hits on controller #{@@controller}
+graph_info Response size of hits on controller #{@controller}
 graph_vlabel bytes
           EOS
-          @@actions.each do |action|
+          @actions.each do |action|
             r += "#{action.to_s}_avg.label average response size of #{action.to_s.camelize}\n"
             r += "#{action.to_s}_min.label minimum response size of #{action.to_s.camelize}\n"
             r += "#{action.to_s}_max.label maximum response size of #{action.to_s.camelize}\n"
@@ -182,10 +182,10 @@ graph_vlabel bytes
         end
         
         def self.fetch
-          r = @@actions.collect do |action|
-            [ "#{action.to_s}_avg.value #{@@size[action].empty? ? 0 : @@size[action].sum.to_f / @@size[action].size}",
-              "#{action.to_s}_min.value #{(@@size[action].min) || 0}",
-              "#{action.to_s}_max.value #{(@@size[action].max) || 0}" ]
+          r = @actions.collect do |action|
+            [ "#{action.to_s}_avg.value #{@size[action].empty? ? 0 : @size[action].sum.to_f / @size[action].size}",
+              "#{action.to_s}_min.value #{(@size[action].min) || 0}",
+              "#{action.to_s}_max.value #{(@size[action].max) || 0}" ]
           end
           clean
           r.flatten * "\n"
@@ -194,9 +194,9 @@ graph_vlabel bytes
         private
 
         def self.clean
-          @@size = {}
-          @@actions.each do |action|
-            @@size[action] = []
+          @size = {}
+          @actions.each do |action|
+            @size[action] = []
           end
         end
       end
