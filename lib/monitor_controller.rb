@@ -164,7 +164,7 @@ graph_vlabel seconds
 
         def self.filter(controller)
           if @actions.member? controller.params[:action].to_sym
-            @size[controller.params[:action].to_sym] << controller.response.body.nil? ? 0 : controller.response.body.size
+            @size[controller.params[:action].to_sym] << (controller.response.body.nil? ? 0 : controller.response.body.size)
           end
           1
         end
