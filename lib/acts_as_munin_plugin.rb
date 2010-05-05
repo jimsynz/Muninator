@@ -16,7 +16,7 @@ module MashdCc
               module Commands
                 class #{model.name}Usage
                   def self.config
-                    "graph_title #{opts[:label]}\n" +
+                    "graph_title Model #{opts[:label]}\n" +
                     "graph_category #{opts[:category]}\n" +
                     "graph_info Model count for model #{model.name}\n" +
                     "graph_vlabel models\n" +

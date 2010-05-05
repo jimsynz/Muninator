@@ -9,7 +9,7 @@ module MashdCc
       module ClassMethods
 
         def monitor_with_munin(opts = {})
-          defaults = { :actions => [ :all ], :controller => self.controller_name }
+          defaults = { :actions => [ :all ], :controller => self.controller_name, :category => 'controllers' }
           opts = defaults.merge(opts)
           if opts[:actions].member? :all
             # For now ActionController::Base#action_methods is wrong, so just
@@ -57,6 +57,7 @@ module MashdCc
         def self.setup(opts)
           @actions = opts[:actions]
           @controller = opts[:controller]
+          @category = opts[:category]
           clean
         end
 
@@ -69,8 +70,8 @@ module MashdCc
 
         def self.config
           r = <<-EOS
-graph_title #{@controller} Hits
-graph_category Controllers
+graph_title Controller #{@controller} Hits
+graph_category #{@category}
 graph_info Action hits on controller #{@controller}
 graph_vlabel hits
           EOS
@@ -102,6 +103,7 @@ graph_vlabel hits
         def self.setup(opts)
           @actions = opts[:actions]
           @controller = opts[:controller]
+          @category = opts[:category]
           clean
         end
 
@@ -119,8 +121,8 @@ graph_vlabel hits
 
         def self.config
           r = <<-EOS
-graph_title #{@controller} Response Time
-graph_category Controllers
+graph_title Controller #{@controller} Response Time
+graph_category #{@category}
 graph_info Response time of hits on controller #{@controller}
 graph_vlabel seconds
           EOS
@@ -156,6 +158,7 @@ graph_vlabel seconds
         def self.setup(opts)
           @actions = opts[:actions]
           @controller = opts[:controller]
+          @category = opts[:category]
           clean
         end
 
@@ -168,8 +171,8 @@ graph_vlabel seconds
 
         def self.config
           r = <<-EOS
-graph_title #{@controller} Response Size
-graph_category Controllers
+graph_title Controller #{@controller} Response Size
+graph_category #{@category}
 graph_info Response size of hits on controller #{@controller}
 graph_vlabel bytes
           EOS
