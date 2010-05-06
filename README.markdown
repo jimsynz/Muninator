@@ -4,7 +4,7 @@ I have used [Munin](http://munin-monitoring.org) for years to monitor machines t
 
 I had been lamenting the lack of visibility of what's going on inside my rails app without going overboard with products like [New Relic's RPM](http://newrelic.com), so I decided to write a rails plugin that turns your Rails application into a munin-node by implementing the protocol that Munin uses.  This, like Munin's protocol itself, was trivially easy.
 
-It's my pleasure to present [Muninator](http://github.com/jamesotron/Muninator).  I have it running for this site, and you're free to [take a look](/munin/index.html).  As you can tell from my graphs, this site doesn't exactly get a lot of traffic, but I think you get the idea.
+It's my pleasure to present [Muninator](http://github.com/jamesotron/Muninator).  I have it running for this site, and you're free to [take a look](http://mashd.cc/munin/index.html).  As you can tell from my graphs, this site doesn't exactly get a lot of traffic, but I think you get the idea.
 
 ![Controller post Hits](http://mashd.cc/munin/mashd.cc-posts_hits-day.png)
 
