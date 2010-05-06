@@ -6,7 +6,7 @@ I had been lamenting the lack of visibility of what's going on inside my rails a
 
 It's my pleasure to present [Muninator](http://github.com/jamesotron/Muninator).  I have it running for this site, and you're free to [take a look](/munin/index.html).  As you can tell from my graphs, this site doesn't exactly get a lot of traffic, but I think you get the idea.
 
-![Controller post Hits](/munin/mashd.cc-posts_hits-day.png)
+![Controller post Hits](http://mashd.cc/munin/mashd.cc-posts_hits-day.png)
 
 Getting Muninator running in your app is trivially easy, start by installing the plugin:
 
