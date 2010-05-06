@@ -4,15 +4,18 @@ module Muninator
       def self.config
         <<-EOS
 graph_title Memory Usage
-graph_category memory
+graph_category process
 graph_info Memory usage by this Ruby process
 graph_vlabel kbytes
-mem.label RSS Memory Usage
+rss.label Resident Memory Usage
+vsz.label Virtual Memory Usage
         EOS
       end
       def self.fetch
+        rss,vsz = `ps -o rss=,vsz= -p #{$$}`.strip.squeeze(' ').split(' ')
         <<-EOS
-mem.value #{`ps -o rss= -p #{$$}`.to_i}
+rss.value #{rss}
+vzs.value #{vsz}
         EOS
       end
     end
