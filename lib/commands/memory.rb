@@ -6,7 +6,7 @@ module Muninator
 graph_title Memory Usage
 graph_category process
 graph_info Memory usage by this Ruby process
-graph_vlabel kbytes
+graph_vlabel bytes
 rss.label Resident Memory Usage
 vsz.label Virtual Memory Usage
         EOS
@@ -14,8 +14,8 @@ vsz.label Virtual Memory Usage
       def self.fetch
         rss,vsz = `ps -o rss=,vsz= -p #{$$}`.strip.squeeze(' ').split(' ')
         <<-EOS
-rss.value #{rss}
-vsz.value #{vsz}
+rss.value #{rss.to_i * 1024}
+vsz.value #{vsz.to_i * 1024}
         EOS
       end
     end
