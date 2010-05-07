@@ -26,7 +26,7 @@
 # Note: This module only works on Linux boxes.  If anyone
 # can think of a way to make it work on OSX I would be
 # v. happy.
-if File.exist?(File.join('proc', $$.to_s, 'io'))
+if File.exist?('/' + File.join('proc', $$.to_s, 'io'))
   module Muninator
     module Commands
       class IoBytes
@@ -44,7 +44,7 @@ cancelled.label Cancelled write bytes
 
         def self.fetch
           data = { :read_bytes => 0, :write_bytes => 0, :cancelled_write_bytes => 0 }
-          File.open(File.join('proc', $$.to_s, 'io')).each do |line|
+          File.open('/' + File.join('proc', $$.to_s, 'io')).each do |line|
             k,v = line.chomp.split(': ')
             data[k.to_sym] = v.to_i
           end
