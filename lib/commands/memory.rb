@@ -15,7 +15,7 @@ vsz.label Virtual Memory Usage
         rss,vsz = `ps -o rss=,vsz= -p #{$$}`.strip.squeeze(' ').split(' ')
         <<-EOS
 rss.value #{rss}
-vzs.value #{vsz}
+vsz.value #{vsz}
         EOS
       end
     end

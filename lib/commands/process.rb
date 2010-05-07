@@ -7,7 +7,7 @@ graph_title CPU Usage
 graph_category process
 graph_info CPU usage by this Ruby process
 graph_vlabel %
-cpu.label Resident Memory Usage
+cpu.label % CPU Usage
         EOS
       end
       def self.fetch
