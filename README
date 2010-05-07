@@ -69,3 +69,8 @@ Phusion Passenger:
 ------------------
 
 As of May 4th 2010, Muninator seems to work fine with Passenger.
+
+License:
+--------
+
+This plugin is licensed under the terms of the Mozilla Public License version 1.1 and is Copyright (c) 2010 James Harton.
