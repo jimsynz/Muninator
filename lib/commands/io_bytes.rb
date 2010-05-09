@@ -39,6 +39,9 @@ graph_vlabel bytes
 read.label Bytes read from storage
 write.label Bytes written to storage
 cancelled.label Cancelled write bytes
+read.type COUNTER
+write.type COUNTER
+cancelled.type COUNTER
           EOS
         end
 
