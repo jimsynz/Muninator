@@ -79,9 +79,19 @@ module Muninator
           end
         end
       end
-      # Attempt to start the server only if the pid file isn't
-      # there.
-      if File.exist?(@lockfile) == false
+      if File.exist?(@lockfile)
+        # If the lockfile exists, then let's just wait 2 minutes
+        # and check it again - I think this is the best way to
+        # make sure that there is the greatest chance that muninator
+        # is still listenening when munin comes around to check.
+        Thread.new do
+          # well, two and a bit, actually.
+          sleep(120 + rand(120))
+          start(port, server_name)
+        end
+      else
+        # Attempt to start the server only if the pid file isn't
+        # there.
         Thread.new do 
           Muninator::Commands.reload
           @server = TCPServer.open(port)
