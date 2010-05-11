@@ -4,7 +4,7 @@ I have used [Munin](http://munin-monitoring.org) for years to monitor machines t
 
 I had been lamenting the lack of visibility of what's going on inside my rails app without going overboard with products like [New Relic's RPM](http://newrelic.com), so I decided to write a rails plugin that turns your Rails application into a munin-node by implementing the protocol that Munin uses.  This, like Munin's protocol itself, was trivially easy.
 
-It's my pleasure to present [Muninator](http://github.com/jamesotron/Muninator).  I have it running for this site, and you're free to [take a look](http://mashd.cc/munin/index.html).  As you can tell from my graphs, this site doesn't exactly get a lot of traffic, but I think you get the idea.
+It's my pleasure to present [Muninator](http://github.com/jamesotron/Muninator).  I have it running for [my site](http://mashd.cc/), and you're free to [take a look](http://mashd.cc/munin/index.html).  As you can tell from my graphs, this site doesn't exactly get a lot of traffic, but I think you get the idea.
 
 ![Controller post Hits](http://mashd.cc/munin/mashd.cc-posts_hits-day.png)
 
@@ -12,7 +12,7 @@ Getting Muninator running in your app is trivially easy, start by installing the
 
     $ ./script/plugin install git://github.com/jamesotron/Muninator.git
 
-Next create `config/muninator.yml` and tell it what environments, ports, etc you want it to use (most likely you only want to monitor your production environment, but just like `config/database.yml` you can specify configs for `development` and `test` also). Here I am instructing Muninator to listen on TCP port 4950 (Munin-node usually uses 4949, but I am incrementing from there) and the `server_name` attribute must match that configured in your `munin.conf` (more on that later).  The `restrict` option can be a list of IP addresses or "localhost" which is an alias for `::1`, `fe80::1` and `127.0.0.1`.
+Next create `config/muninator.yml` and tell it what environments, ports, etc you want it to use (most likely you only want to monitor your production environment, but just like `config/database.yml` you can specify configs for `development` and `test` also). Here I am instructing Muninator to listen on TCP port 4950 (Munin-node usually uses 4949, but I am incrementing from there) and the `server_name` attribute must match that configured in your `munin.conf` (more on that later).  The `restrict` option can be a list of IP addresses or `localhost` which is an alias for `::1`, `fe80::1` and `127.0.0.1`.
 
     $ cat <<EOF > config/muninator.yml
     > production:
@@ -26,7 +26,7 @@ Next we need to create an initialiser to instruct Rails to start up Muninator wh
     $ cat <<EOF > config/initializers/muninator.rb
     > Muninator.from_config
 
-By default Muninator will load plugins to monitor process memory usage (resident size) and thread state.  I expect these don't give very accurate data however when running on systems like [Passenger](http://modrails.com) which will `fork` multiple instances of the application, although they do give you an idea of how much memory each instance is using.
+By default Muninator will load plugins to monitor process memory usage (resident and virtual size), disk I/O and thread state.  I expect these don't give very accurate data however when running on systems like [Passenger](http://modrails.com) which will `fork` multiple instances of the application, although they do give you an idea of how much memory each instance is using and whether it is [grinding](http://en.wikipedia.org/wiki/Grinding_%28video_gaming%29).
 
 You can also add automagic monitoring of your models (at the moment, just total row count plus additions and modifications) by calling the `acts_as_munin_plugin` class method within your models.  You might also want to add an explicit call to the model class in your `config/initializers/muninator.rb` to make sure that the model is loaded at application start-up (by default models are lazy-loaded by Rails).
 
