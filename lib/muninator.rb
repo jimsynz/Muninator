@@ -33,8 +33,8 @@ module Muninator
     @running = false
 
     def from_config
-      config = YAML.load_file(File.join(RAILS_ROOT, "config", "muninator.yml"))
-      conf = config[RAILS_ENV] || {}
+      config = YAML.load_file(Rails.root.join("config", "muninator.yml"))
+      conf = config[Rails.env] || {}
       if conf['restrict']
         if conf['restrict'] == 'localhost'
           restrict_to :localhost
@@ -62,7 +62,7 @@ module Muninator
     def start(port, server_name)
       @port = port
       @server_name = server_name
-      @lockfile = File.join(RAILS_ROOT, 'tmp', "muninator_port_#{port.to_s}.lock")
+      @lockfile = Rails.root.join('tmp', "muninator_port_#{port.to_s}.lock")
       # Add callback for Passenger to restart Muninator if needed.
       if File.exist? @lockfile
         # The PIDfile exists, but let's check that it's not stale.
@@ -74,7 +74,7 @@ module Muninator
             Process.kill(0,pid)
           rescue Errno::ESRCH => e
             # Lockfile is stale, nuke it.
-            RAILS_DEFAULT_LOGGER.warn("Overriding stale lockfile #{@lockfile}")
+            Rails.logger.warn("Overriding stale lockfile #{@lockfile}")
             File.delete(@lockfile)
           end
         end
@@ -95,7 +95,7 @@ module Muninator
         Thread.new do 
           Muninator::Commands.reload
           @server = TCPServer.open(port)
-          RAILS_DEFAULT_LOGGER.info("Opening port #{port} as Munin Node.")
+          Rails.logger.info("Opening port #{port} as Munin Node.")
           File.open(@lockfile, "w+") do |io|
             io.puts $$
           end
@@ -105,7 +105,7 @@ module Muninator
             if File.exist? @lockfile 
               File.delete(@lockfile)
             end
-            RAILS_DEFAULT_LOGGER.info("Closing Munin Node on port #{port}.")
+            Rails.logger.info("Closing Munin Node on port #{port}.")
           end
           @port = port
           @server_name = server_name
@@ -113,7 +113,7 @@ module Muninator
             loop do
               begin 
                 client = @server.accept_nonblock
-                RAILS_DEFAULT_LOGGER.info("Accepting connection from #{client.peeraddr.last}")
+                Rails.logger.info("Accepting connection from #{client.peeraddr.last}")
                 if ((@restrict ||= []).size > 0) && (! @restrict.member? client.peeraddr.last)
                   client.close
                 else
@@ -174,7 +174,7 @@ module Muninator
           @socket.puts "# munin node at #{Muninator.server_name}"
           while line = @socket.gets do
             line.chomp!
-            RAILS_DEFAULT_LOGGER.debug("Received #{line.inspect} from client.")
+            Rails.logger.debug("Received #{line.inspect} from client.")
             cmd = line.split(' ').first
             args = line.split(' ')[1..-1]
             case cmd 
