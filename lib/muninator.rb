@@ -154,12 +154,13 @@ module Muninator
     end
 
     def restrict_to(what)
+      @restrict ||= []
       if what == :localhost
-        @restrict = [ '::1', 'fe80::1', '127.0.0.1' ]
+        @restrict += [ '::1', 'fe80::1', '127.0.0.1' ]
       elsif what.is_a? Array
         @restrict += what
       elsif what.is_a? String
-        @restruct += what
+        @restrict += what
       end
     end
 
