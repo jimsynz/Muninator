@@ -185,27 +185,18 @@ module Muninator
               @socket.puts "."
             when "config"
               if Muninator::Commands.list.member? args.first
-                begin
-                  instance_eval <<-RUBY
-                  @socket.puts Muninator::Commands::#{args.first.camelize}.config
-                  RUBY
-                rescue Exception => e
-                  @socket.puts "# Error: #{e.message}"
-                end
+                instance_eval <<-RUBY
+                @socket.puts Muninator::Commands::#{args.first.camelize}.config
+                RUBY
               else
                 @socket.puts "# Unknown service"
               end
               @socket.puts "."
             when "fetch"
               if Muninator::Commands.list.member? args.first
-                begin
-                  instance_eval <<-RUBY
-                  @socket.puts Muninator::Commands::#{args.first.camelize}.fetch
-                  RUBY
-                rescue Exception => e
-                  @socket.puts "# Error: #{e.message}"
-                  RAILS_DEFAULT_LOGGER.debug(e.inspect)
-                end
+                instance_eval <<-RUBY
+                @socket.puts Muninator::Commands::#{args.first.camelize}.fetch
+                RUBY
               else
                 @socket.puts "# Unknown service"
               end
@@ -218,6 +209,9 @@ module Muninator
               @socket.puts "# Unknown command. Try list, nodes, config, fetch, version or quit"
             end
           end
+        rescue Exception => e
+          @socket.puts "# Error: #{e.message}"
+          Rails.logger.debug(e.inspect)
         ensure
           @socket.close
         end
