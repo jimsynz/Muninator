@@ -32,20 +32,20 @@ module Muninator
     def dispatch(cmd=nil, *args)
       case cmd 
       when "list"
-        out Muninator::Commands.list * " "
+        out (Muninator::Commands.list + Muninator::Template.commands) * " "
       when "nodes"
         out Muninator.server_name
         out "."
       when "config"
-        if command = Muninator::Commands.find(args.first)
-          out command.config
+        if plugin = Muninator::Commands.find(args.first) || Muninator::Template.find(args.first)
+          out plugin.config
         else
           out "# Unknown service"
         end
         out "."
       when "fetch"
-        if command = Muninator::Commands.find(args.first)
-          out command.fetch
+        if plugin = Muninator::Commands.find(args.first) || Muninator::Template.find(args.first)
+          out plugin.fetch
         else
           out "# Unknown service"
         end

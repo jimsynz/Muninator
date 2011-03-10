@@ -8,6 +8,5 @@ module Muninator
         Muninator.from_config
       end
     end
-
   end
 end

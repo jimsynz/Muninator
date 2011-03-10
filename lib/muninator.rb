@@ -94,6 +94,7 @@ module Muninator
         # there.
         Thread.new do 
           Muninator::Commands.load_all
+          Muninator::Template.load_all
           @server = TCPServer.open(port)
           Rails.logger.info("Opening port #{port} as Munin Node.")
           File.open(@lockfile, "w+") do |io|
@@ -170,6 +171,7 @@ end
 
 require 'muninator/client'
 require 'muninator/commands'
+require 'muninator/template'
 
 require 'muninator/acts_as_munin_plugin.rb'
 require 'muninator/monitor_controller.rb'
