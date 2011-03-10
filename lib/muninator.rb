@@ -283,7 +283,7 @@ module Muninator
       end
 
       def constant_name(command)
-        "::Muninator::Commands::#{command.to_s.capitalize}"
+        "::Muninator::Commands::#{command.to_s.camelize}"
       end
     end
 
