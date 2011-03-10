@@ -12,12 +12,13 @@ module Muninator
 
       def load_all
         files.each do |path|
-           basename = File.basename(path)
-           class_name = basename.split('.').first.classify
-           unless constants.grep(/^#{class_name}$/).empty?
-             # TODO already loaded. unload?
-           else
-             require_dependency path
+          basename = File.basename(path)
+          class_name = basename.split('.').first.classify
+          unless constants.grep(/^#{class_name}$/).empty?
+            # TODO already loaded. unload?
+          else
+            Rails.logger.debug { "#{self} require #{path}" }
+            require_dependency path
           end
         end
       end
@@ -37,6 +38,7 @@ module Muninator
       private
       def files
         search_paths.map do |path|
+          Rails.logger.debug { "#{self} files #{path}" }
           Dir.glob path.ends_with?('/') ? "#{path}*.rb" : "#{path}/*.rb"
         end.flatten.uniq
       end
