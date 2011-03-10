@@ -167,54 +167,77 @@ module Muninator
 
   class Client
 
+    class Quit < Exception; end
+
     def initialize(socket)
       @socket = socket
+      start_session
+    end
+
+    def start_session(timeout=60)
       Timeout.timeout(60) do
         begin
-          @socket.puts "# munin node at #{Muninator.server_name}"
+          out "# munin node at #{Muninator.server_name}"
           while line = @socket.gets do
             line.chomp!
-            Rails.logger.debug("Received #{line.inspect} from client.")
-            cmd = line.split(' ').first
-            args = line.split(' ')[1..-1]
-            case cmd 
-            when "list"
-              @socket.puts Muninator::Commands.list * " "
-            when "nodes"
-              @socket.puts Muninator.server_name
-              @socket.puts "."
-            when "config"
-              if Muninator::Commands.list.member? args.first
-                instance_eval <<-RUBY
-                @socket.puts Muninator::Commands::#{args.first.camelize}.config
-                RUBY
-              else
-                @socket.puts "# Unknown service"
-              end
-              @socket.puts "."
-            when "fetch"
-              if Muninator::Commands.list.member? args.first
-                instance_eval <<-RUBY
-                @socket.puts Muninator::Commands::#{args.first.camelize}.fetch
-                RUBY
-              else
-                @socket.puts "# Unknown service"
-              end
-              @socket.puts "."
-            when "version"
-              @socket.puts "Muninator on #{Muninator.server_name} version: #{Muninator.version}"
-            when "quit"
-              break
-            else
-              @socket.puts "# Unknown command. Try list, nodes, config, fetch, version or quit"
-            end
+            debug { "Received #{line.inspect} from client." }
+            dispatch *line.split(' ')
           end
+        rescue Quit => e
+          debug { "quitting" }
+          @socket.close
         rescue Exception => e
-          @socket.puts "# Error: #{e.message}"
-          Rails.logger.debug(e.inspect)
+          out "# Error: #{e.message}"
+          debug { ([e.message] + e.backtrace).join("\n") }
         ensure
           @socket.close
         end
+      end
+    end
+
+    def dispatch(cmd=nil, *args)
+      case cmd 
+      when "list"
+        out Muninator::Commands.list * " "
+      when "nodes"
+        out Muninator.server_name
+        out "."
+      when "config"
+        if Muninator::Commands.list.member? args.first
+          instance_eval <<-RUBY
+          out Muninator::Commands::#{args.first.camelize}.config
+          RUBY
+        else
+          out "# Unknown service"
+        end
+        out "."
+      when "fetch"
+        if Muninator::Commands.list.member? args.first
+          instance_eval <<-RUBY
+          out Muninator::Commands::#{args.first.camelize}.fetch
+          RUBY
+        else
+          out "# Unknown service"
+        end
+        out "."
+      when "version"
+        out "Muninator on #{Muninator.server_name} version: #{Muninator.version}"
+      when "quit"
+        raise Quit
+      when nil
+        out "# no comment about an empty line"
+      else
+        out "# Unknown command. Try list, nodes, config, fetch, version or quit"
+      end
+    end
+
+    def out(message)
+      @socket.puts message
+    end
+
+    def debug
+      Rails.logger.debug do
+        "Muninator #{yield}"
       end
     end
 
