@@ -173,3 +173,5 @@ require 'muninator/commands'
 
 require 'muninator/acts_as_munin_plugin.rb'
 require 'muninator/monitor_controller.rb'
+
+require 'muninator/rail_tie.rb' if defined?(Rails)
