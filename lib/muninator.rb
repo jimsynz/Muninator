@@ -203,19 +203,15 @@ module Muninator
         out Muninator.server_name
         out "."
       when "config"
-        if Muninator::Commands.list.member? args.first
-          instance_eval <<-RUBY
-          out Muninator::Commands::#{args.first.camelize}.config
-          RUBY
+        if command = Muninator::Commands.find(args.first)
+          out command.config
         else
           out "# Unknown service"
         end
         out "."
       when "fetch"
-        if Muninator::Commands.list.member? args.first
-          instance_eval <<-RUBY
-          out Muninator::Commands::#{args.first.camelize}.fetch
-          RUBY
+        if command = Muninator::Commands.find(args.first)
+          out command.fetch
         else
           out "# Unknown service"
         end
@@ -267,6 +263,15 @@ module Muninator
       end
       def list
         self.constants.collect { |name| name.to_s.underscore }.sort
+      end
+
+      # finds class by command, returns nil if not found
+      def find(command)
+        if list.member? command
+          const_get(command.to_s.classify.to_sym)
+        else
+          nil
+        end
       end
 
       private
