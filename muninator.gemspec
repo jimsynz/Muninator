@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{muninator}
-  s.version = "0.0.3"
+  s.version = "0.0.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["James Harton", "Niklas Hofer"]
-  s.date = %q{2011-03-10}
+  s.date = %q{2011-03-11}
   s.description = %q{Generate graphs with munin for statistics within a ruby on rails aplication}
   s.email = %q{niklas+dev@lanpartei.de}
   s.extra_rdoc_files = [
@@ -35,9 +35,11 @@ Gem::Specification.new do |s|
     "lib/muninator/commands/threads.rb",
     "lib/muninator/monitor_controller.rb",
     "lib/muninator/rail_tie.rb",
+    "lib/muninator/template.rb",
     "munin_rails.sh",
     "muninator.gemspec",
     "spec/muninator/client_spec.rb",
+    "spec/muninator/template_spec.rb",
     "spec/muninator_spec.rb",
     "spec/spec_helper.rb"
   ]
@@ -48,6 +50,7 @@ Gem::Specification.new do |s|
   s.summary = %q{Munin graphs for your rails application}
   s.test_files = [
     "spec/muninator/client_spec.rb",
+    "spec/muninator/template_spec.rb",
     "spec/muninator_spec.rb",
     "spec/spec_helper.rb"
   ]
@@ -60,17 +63,23 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.5.2"])
       s.add_development_dependency(%q<rcov>, [">= 0"])
+      s.add_development_dependency(%q<rails>, ["~> 3.0.5"])
+      s.add_development_dependency(%q<fakefs>, [">= 0"])
     else
       s.add_dependency(%q<rspec>, ["~> 2.3.0"])
       s.add_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
       s.add_dependency(%q<rcov>, [">= 0"])
+      s.add_dependency(%q<rails>, ["~> 3.0.5"])
+      s.add_dependency(%q<fakefs>, [">= 0"])
     end
   else
     s.add_dependency(%q<rspec>, ["~> 2.3.0"])
     s.add_dependency(%q<bundler>, ["~> 1.0.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
     s.add_dependency(%q<rcov>, [">= 0"])
+    s.add_dependency(%q<rails>, ["~> 3.0.5"])
+    s.add_dependency(%q<fakefs>, [">= 0"])
   end
 end
 
