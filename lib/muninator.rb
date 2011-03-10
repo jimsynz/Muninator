@@ -268,7 +268,7 @@ module Muninator
       # finds class by command, returns nil if not found
       def find(command)
         if list.member? command
-          const_get(command.to_s.classify.to_sym)
+          constant_name(command).constantize
         else
           nil
         end
@@ -279,6 +279,10 @@ module Muninator
         search_paths.map do |path|
           Dir.glob path.ends_with?('/') ? "#{path}*.rb" : "#{path}/*.rb"
         end.flatten.uniq
+      end
+
+      def constant_name(command)
+        "::Muninator::Commands::#{command.to_s.capitalize}"
       end
     end
 
