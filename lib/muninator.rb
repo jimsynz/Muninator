@@ -93,7 +93,7 @@ module Muninator
         # Attempt to start the server only if the pid file isn't
         # there.
         Thread.new do 
-          Muninator::Commands.reload
+          Muninator::Commands.load_all
           @server = TCPServer.open(port)
           Rails.logger.info("Opening port #{port} as Munin Node.")
           File.open(@lockfile, "w+") do |io|
@@ -225,26 +225,32 @@ module Muninator
 
     class << self
 
-      attr_accessor :search_paths
+      attr_writer :search_paths
 
-      def reload
+      def search_paths
         @search_paths ||=  [ File.join(File.dirname(__FILE__), 'commands') ]
-        @search_paths.each do |dir|
-          Dir.entries(dir).each do |file|
-            if file =~ /\.rb$/
-              if self.constants.collect { |name| name.to_s.downcase }.member? file.split('.').first
-                # remove constant, blah.
-              else
-                require File.join(dir, file)
-              end
-            end
+      end
+
+      def load_all
+        files.each do |path|
+           basename = File.basename(path)
+           class_name = basename.split('.').first.classify
+           unless constants.grep(/^#{class_name}$/).empty?
+             # TODO already loaded. unload?
+           else
+             require_dependency path
           end
         end
-        # Add class reloading, but for now...
-        require File.dirname(__FILE__) + '/commands/memory.rb'
       end
       def list
         self.constants.collect { |name| name.to_s.underscore }.sort
+      end
+
+      private
+      def files
+        search_paths.map do |path|
+          Dir.glob path.ends_with?('/') ? "#{path}*.rb" : "#{path}/*.rb"
+        end.flatten.uniq
       end
     end
 
