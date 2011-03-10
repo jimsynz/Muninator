@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{muninator}
-  s.version = "0.0.2"
+  s.version = "0.0.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["James Harton", "Niklas Hofer"]
@@ -25,14 +25,14 @@ Gem::Specification.new do |s|
     "Rakefile",
     "TODO",
     "VERSION",
-    "lib/commands/io_bytes.rb",
-    "lib/commands/memory.rb",
-    "lib/commands/process.rb",
-    "lib/commands/threads.rb",
     "lib/muninator.rb",
     "lib/muninator/acts_as_munin_plugin.rb",
     "lib/muninator/client.rb",
     "lib/muninator/commands.rb",
+    "lib/muninator/commands/io_bytes.rb",
+    "lib/muninator/commands/memory.rb",
+    "lib/muninator/commands/process.rb",
+    "lib/muninator/commands/threads.rb",
     "lib/muninator/monitor_controller.rb",
     "lib/muninator/rail_tie.rb",
     "munin_rails.sh",
