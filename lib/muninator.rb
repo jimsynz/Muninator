@@ -232,7 +232,7 @@ module Muninator
         @search_paths.each do |dir|
           Dir.entries(dir).each do |file|
             if file =~ /\.rb$/
-              if self.constants.collect { |name| name.downcase }.member? file.split('.').first
+              if self.constants.collect { |name| name.to_s.downcase }.member? file.split('.').first
                 # remove constant, blah.
               else
                 require File.join(dir, file)
@@ -244,7 +244,7 @@ module Muninator
         require File.dirname(__FILE__) + '/commands/memory.rb'
       end
       def list
-        self.constants.collect { |name| name.underscore }.sort
+        self.constants.collect { |name| name.to_s.underscore }.sort
       end
     end
 
