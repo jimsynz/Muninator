@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{muninator}
-  s.version = "0.0.0"
+  s.version = "0.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["James Harton", "Niklas Hofer"]
@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
     "TODO"
   ]
   s.files = [
+    ".rspec",
     "Gemfile",
     "Gemfile.lock",
     "MPL-LICENSE",
@@ -25,20 +26,32 @@ Gem::Specification.new do |s|
     "TODO",
     "VERSION",
     "init.rb",
-    "lib/acts_as_munin_plugin.rb",
     "lib/commands/io_bytes.rb",
     "lib/commands/memory.rb",
     "lib/commands/process.rb",
     "lib/commands/threads.rb",
-    "lib/monitor_controller.rb",
     "lib/muninator.rb",
-    "munin_rails.sh"
+    "lib/muninator/acts_as_munin_plugin.rb",
+    "lib/muninator/client.rb",
+    "lib/muninator/commands.rb",
+    "lib/muninator/monitor_controller.rb",
+    "lib/muninator/rail_tie.rb",
+    "munin_rails.sh",
+    "muninator.gemspec",
+    "spec/muninator/client_spec.rb",
+    "spec/muninator_spec.rb",
+    "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/niklas/muninator}
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.5.2}
   s.summary = %q{Munin graphs for your rails application}
+  s.test_files = [
+    "spec/muninator/client_spec.rb",
+    "spec/muninator_spec.rb",
+    "spec/spec_helper.rb"
+  ]
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
