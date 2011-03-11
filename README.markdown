@@ -18,7 +18,7 @@ Getting Muninator running in your app is trivially easy, start by installing the
 
 Just add the 'muninator' gem to your application's Gemfile
 
-    gem 'muninator', :git => 'git://github.com/niklas/Muninator.git'
+    gem 'muninator'
 
 ## Configuration
 
