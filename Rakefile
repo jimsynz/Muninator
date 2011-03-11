@@ -13,7 +13,7 @@ require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "muninator"
-  gem.homepage = "http://github.com/niklas/muninator"
+  gem.homepage = "http://github.com/jamesotron/muninator"
   gem.license = "MIT"
   gem.summary = %Q{Munin graphs for your rails application}
   gem.description = %Q{Generate graphs with munin for statistics within a ruby on rails aplication}
