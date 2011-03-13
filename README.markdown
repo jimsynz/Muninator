@@ -83,7 +83,7 @@ The only other potential gotcha is that platforms like Passenger will shut down 
     awk '/^\[Rails\;(.+)\]$/{print gensub(/.*;(.+)]/,"wget -O /dev/null -q http://\\1","")}' /etc/munin/munin.conf  | sh
 
 ## Write your own plugins
-If you wish to create your own Muninator plugin (or plugins) to monitor a specific part of your application then it's dead simple.  All you have to do is add a class to `Muninator::Commands` that implements `config()` and `fetch()` class methods which return strings in the [format expected by Munin](http://munin-monitoring.org/wiki/protocol-config). Take a look at the source for [Muninator's memory plugin](http://github.com/jamesotron/Muninator/blob/master/lib/commands/memory.rb) for about the simplest possible plugin.  If you plugin is even vaguely useful to others then please feel free to contribute it either by forking on Github and sending me a pull request, or just [hit me on twitter](http://www.twitter.com/jamesotron)
+If you wish to create your own Muninator plugin (or plugins) to monitor a specific part of your application then it's dead simple.  All you have to do is add a class to `Muninator::Commands` that implements `config()` and `fetch()` class methods which return strings in the [format expected by Munin](http://munin-monitoring.org/wiki/protocol-config). Take a look at the source for [Muninator's memory plugin](https://github.com/jamesotron/Muninator/blob/master/lib/muninator/commands/memory.rb) for about the simplest possible plugin.  If you plugin is even vaguely useful to others then please feel free to contribute it either by forking on Github and sending me a pull request, or just [hit me on twitter](http://www.twitter.com/jamesotron)
 
 ## License
 
