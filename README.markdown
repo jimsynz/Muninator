@@ -87,4 +87,4 @@ If you wish to create your own Muninator plugin (or plugins) to monitor a specif
 
 ## License
 
-This plugin is licensed under the terms of the Mozilla Public License version 1.1 or later and Copyright (c) 2010 James Harton.
+This plugin is licensed under the terms of the Mozilla Public License version 1.1 or later and Copyright (c) 2010, 2011 James Harton.
