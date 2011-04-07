@@ -22,14 +22,21 @@ Just add the 'muninator' gem to your application's Gemfile
 
 ## Configuration
 
-Next create `config/muninator.yml` and tell it what environments, ports, etc you want it to use (most likely you only want to monitor your production environment, but just like `config/database.yml` you can specify configs for `development` and `test` also). Here I am instructing Muninator to listen on TCP port 4950 (Munin-node usually uses 4949, but I am incrementing from there) and the `server_name` attribute must match that configured in your `munin.conf` (more on that later).  The `restrict` option can be a list of IP addresses or `localhost` which is an alias for `::1`, `fe80::1` and `127.0.0.1`.
+Next create `config/muninator.yml` and tell it what environments, ports, etc you want it to use (most likely you only want to monitor your production environment, but just like `config/database.yml` you can specify configs for `development` and `test` also). 
+
+    $ rails generate muninator:install
+
+Here I am instructing Muninator to listen on TCP port 4950 (Munin-node usually uses 4949, but I am incrementing from there) and the `server_name` attribute must match that configured in your `munin.conf` (more on that later).  The `restrict` option can be a list of IP addresses or `localhost` which is an alias for `::1`, `fe80::1` and `127.0.0.1`.
 
     $ cat <<EOF > config/muninator.yml
     > production:
     >   server_name: myrailsapp.com
     >   port: 4950
     >   restrict: localhost
+    >   # standalone: true
     > EOF
+   
+If you set standalone to true, you will be able to start muninator by its own by invoking script/muninator - you will loose your controller / performance benchmarks but the server will be always up.
 
 ## Data Sources
 
@@ -81,6 +88,8 @@ Getting Munin itself installed is beyond the scope of this article, and there ar
 The only other potential gotcha is that platforms like Passenger will shut down your rails apps if they don't have any hits for a while, leaving large blank patches in your graphs.  This might actually be desirable (especially on low memory environments), however I whipped up the following which I run in cron just before the `munin-update` job:
 
     awk '/^\[Rails\;(.+)\]$/{print gensub(/.*;(.+)]/,"wget -O /dev/null -q http://\\1","")}' /etc/munin/munin.conf  | sh
+
+Another way is to run muninator as a standalone server. See Configuration above.
 
 ## Write your own plugins
 If you wish to create your own Muninator plugin (or plugins) to monitor a specific part of your application then it's dead simple.  All you have to do is add a class to `Muninator::Commands` that implements `config()` and `fetch()` class methods which return strings in the [format expected by Munin](http://munin-monitoring.org/wiki/protocol-config). Take a look at the source for [Muninator's memory plugin](https://github.com/jamesotron/Muninator/blob/master/lib/muninator/commands/memory.rb) for about the simplest possible plugin.  If you plugin is even vaguely useful to others then please feel free to contribute it either by forking on Github and sending me a pull request, or just [hit me on twitter](http://www.twitter.com/jamesotron)
