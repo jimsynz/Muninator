@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{muninator}
-  s.version = "0.0.5"
+  s.version = "0.0.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["James Harton", "Niklas Hofer"]
-  s.date = %q{2011-03-11}
+  s.date = %q{2011-04-13}
   s.description = %q{Generate graphs with munin for statistics within a ruby on rails aplication}
   s.email = %q{niklas+dev@lanpartei.de}
   s.extra_rdoc_files = [
@@ -25,6 +25,9 @@ Gem::Specification.new do |s|
     "Rakefile",
     "TODO",
     "VERSION",
+    "lib/generators/muninator/USAGE",
+    "lib/generators/muninator/install_generator.rb",
+    "lib/generators/muninator/templates/muninator.yml.erb",
     "lib/muninator.rb",
     "lib/muninator/acts_as_munin_plugin.rb",
     "lib/muninator/client.rb",
@@ -36,14 +39,16 @@ Gem::Specification.new do |s|
     "lib/muninator/monitor_controller.rb",
     "lib/muninator/rail_tie.rb",
     "lib/muninator/template.rb",
+    "lib/tasks/muninator.rake",
     "munin_rails.sh",
     "muninator.gemspec",
+    "script/muninator",
     "spec/muninator/client_spec.rb",
     "spec/muninator/template_spec.rb",
     "spec/muninator_spec.rb",
     "spec/spec_helper.rb"
   ]
-  s.homepage = %q{http://github.com/niklas/muninator}
+  s.homepage = %q{http://github.com/jamesotron/muninator}
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.5.2}
