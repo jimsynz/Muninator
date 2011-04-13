@@ -155,9 +155,8 @@ module Muninator
           start
         end
       else
-        # Attempt to start the server only if the pid file isn't
-        # there.
         if standalone?
+          Signal.trap "INT", proc { stop }
           run.join
         else
           Thread.new do 
@@ -178,7 +177,7 @@ module Muninator
       end
       @running = true
       at_exit do
-        @server.close
+        @server.close rescue IOError
         if File.exist? lockfile 
           File.delete(lockfile)
         end
