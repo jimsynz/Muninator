@@ -1,0 +1,10 @@
+development:
+  server_name: development.<%= app_name %>.example.com
+  port: 4950
+  restrict: localhost
+production:
+  server_name: www.<%= app_name %>.example.com
+  port: 4950
+  restrict: 127.0.0.1,192.168.23.42 # (company munin collector)
+  # remove comment to enable standalone mode
+  # standalone: true

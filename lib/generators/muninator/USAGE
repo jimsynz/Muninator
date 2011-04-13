@@ -1,0 +1,4 @@
+To copy the standalone Muninator script and rake tasks to your Rails App, with some configuration values, just do:
+
+    rails generate muninator:install
+
