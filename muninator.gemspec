@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["James Harton", "Niklas Hofer"]
-  s.date = %q{2011-04-13}
+  s.date = %q{2011-04-17}
   s.description = %q{Generate graphs with munin for statistics within a ruby on rails aplication}
   s.email = %q{niklas+dev@lanpartei.de}
   s.extra_rdoc_files = [
@@ -27,7 +27,9 @@ Gem::Specification.new do |s|
     "VERSION",
     "lib/generators/muninator/USAGE",
     "lib/generators/muninator/install_generator.rb",
+    "lib/generators/muninator/templates/muninator.rake",
     "lib/generators/muninator/templates/muninator.yml.erb",
+    "lib/generators/muninator/templates/script",
     "lib/muninator.rb",
     "lib/muninator/acts_as_munin_plugin.rb",
     "lib/muninator/client.rb",
@@ -39,10 +41,8 @@ Gem::Specification.new do |s|
     "lib/muninator/monitor_controller.rb",
     "lib/muninator/rail_tie.rb",
     "lib/muninator/template.rb",
-    "lib/tasks/muninator.rake",
     "munin_rails.sh",
     "muninator.gemspec",
-    "script/muninator",
     "spec/muninator/client_spec.rb",
     "spec/muninator/template_spec.rb",
     "spec/muninator_spec.rb",
