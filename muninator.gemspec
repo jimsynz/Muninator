@@ -5,12 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{muninator}
-  s.version = "0.0.6"
+  s.version = "0.0.7"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["James Harton", "Niklas Hofer"]
-  s.date = %q{2011-04-17}
-  s.description = %q{Generate graphs with munin for statistics within a ruby on rails aplication}
+  s.date = %q{2011-09-12}
+  s.description = %q{Generate graphs with munin for statistics within a ruby on rails application}
   s.email = %q{niklas+dev@lanpartei.de}
   s.extra_rdoc_files = [
     "README.markdown",
@@ -51,7 +51,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/jamesotron/muninator}
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.5.2}
+  s.rubygems_version = %q{1.6.2}
   s.summary = %q{Munin graphs for your rails application}
   s.test_files = [
     "spec/muninator/client_spec.rb",

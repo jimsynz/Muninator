@@ -40,7 +40,7 @@ Jeweler::Tasks.new do |gem|
   gem.homepage = "http://github.com/jamesotron/muninator"
   gem.license = "MIT"
   gem.summary = %Q{Munin graphs for your rails application}
-  gem.description = %Q{Generate graphs with munin for statistics within a ruby on rails aplication}
+  gem.description = %Q{Generate graphs with munin for statistics within a ruby on rails application}
   gem.email = "niklas+dev@lanpartei.de"
   gem.authors = ["James Harton", "Niklas Hofer"]
   # Include your dependencies below. Runtime dependencies are required when using your gem,

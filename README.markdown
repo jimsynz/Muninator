@@ -8,15 +8,11 @@ It's my pleasure to present [Muninator](http://github.com/jamesotron/Muninator).
 
 ## Installation
 
-### Rails 2
-
-Getting Muninator running in your app is trivially easy, start by installing the plugin:
+Getting Muninator running in your app is trivially easy, start by installing the plugin (preferred for Rails 2)
 
     $ ./script/plugin install git://github.com/jamesotron/Muninator.git
 
-### Rails 3
-
-Just add the 'muninator' gem to your application's Gemfile
+Or Just add the 'muninator' gem to your application's Gemfile (preferred way for Rails 3)
 
     gem 'muninator'
 
